@@ -13,19 +13,13 @@ class ChartGallary extends React.Component {
 
   /* 함수를 SearchBarForm 으로 전달해야 함 ???*/
   loadStockChartFromServer = (searchQuery) => {
-    client.search(searchQuery, (serverCharts) => (
+    client.search({searchQuery:searchQuery}, (serverCharts) => (
       this.setState( {stocks: serverCharts} )
     ));
   };
 
-  loadTimersFromServer = () => {
-    client.getTimers((serverTimers) => (
-      this.setState( {timers: serverTimers})
-    ));
-  };
-
   handleSearchSubmit = (searchQuery) => {
-    this.loadStockChartFromServer( {searchQuery:searchQuery});
+    this.loadStockChartFromServer(searchQuery);
   };
 
   render() {
@@ -110,9 +104,8 @@ class ChartList extends React.Component {
       <Stock
         key                 = {'stock-' + stock.id}
         id                  = {stock.id}
-        title               = {stock.title}
-        description         = {stock.description}
-        chartImageUrl       = {stock.chartImageUrl}
+        title               = {stock.code}
+        chart               = {stock.chart}
       />
     ));
 
@@ -134,24 +127,25 @@ class Stock extends React.Component {
     //binding this in funtion
     this.handleUpVote = this.handleUpVote.bind(this);
   }
+  <img src={{uri: `data:image/png;base64,${this.props.chart}`}} />
   */
 
   render() {
     return (
       <div className='item'>
-        <div className='image'>
-          <img src={this.props.chartImageUrl} />
+        <div className="ui large image">
+          <img  src={"data:image/png;base64," + this.props.chart}/>
         </div>
         <div className='middle aligned content'>
           <div className='description'>
-            <a href={this.props.url}>{this.props.title}</a>
-            <p>{this.props.description}</p>
+            <a href='#'>{this.props.title}</a>
           </div>
         </div>
       </div>
     );
   }
 }
+
 
 ReactDOM.render(
   <ChartGallary />,

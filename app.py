@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 import jinja2
+import chart_app
 
 app = Flask(__name__)
 
@@ -10,28 +11,10 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-    print("HELP ME")
     if request.method == 'POST':
         content = request.json
-        print (content)
-
-    data='''
-    [
-        {
-          "id": 1,
-          "title": "015260.KS",
-          "description": "A&P",
-          "url": "#",
-          "chartImageUrl": "static/images/products/image-aqua.png"
-        },
-        {
-          "id": 2,
-          "title": "078520.KS",
-          "description": "ABLE C&C",
-          "url": "#",
-          "chartImageUrl": "static/images/products/image-rose.png"
-        }
-    ]'''
+        query = content['searchQuery']
+        data = chart_app.gpdb_dao.search(query)
 
     return data
 

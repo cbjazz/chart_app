@@ -1,8 +1,8 @@
 window.client = (function() {
-    function search(searchQuery, success) {
+    function search(data, success) {
       return fetch('search', {
         method: 'post',
-        body: '{"find":"here"}',
+        body: JSON.stringify(data),
         headers: {
           'Accept': 'application/json',
           'Content-Type' : 'application/json'

@@ -1,0 +1,49 @@
+{
+  "name": "chart_app",
+  "version": "1.0.0",
+  "description": "chart app for gpdb",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom --passWithNoTests",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbjazz/chart_app.git"
+  },
+  "keywords": [
+    "gpdb",
+    "react",
+    "flask"
+  ],
+  "author": "cbjazz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbjazz/chart_app/issues"
+  },
+  "homepage": "https://github.com/cbjazz/chart_app#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-script": "^2.0.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.84.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-react": "^6.24.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

@@ -6,20 +6,49 @@
 */
 class ChartGallary extends React.Component {
 
-  /* Query 결과의 StockList 정보를 가지고 있어서, ChartList 에 전달해야 함 ???*/
-  state = {
-    stocks: [],
+  /* Query 결과의 StockList 정보를 가지고 있어서, ChartList 에 전달해야 함 */
+  constructor(props) {
+   super(props);
+
+   this.state = {
+     stocks: [],
+     showModal: false,
+     stockId: '',
+   }
   }
+
+/*
+  // Function for opening modal dialog
+  handleOpenModal = (id) => {
+    this.setState({
+      showModal: true,
+      stock: this.state.stocks.map((stock) => {
+        if (stock.id == id) {
+          return stock
+        } else {
+          return {}
+        }
+      })
+    })
+  };
+
+  // Function for closing modal dialog
+  handleCloseModal = () => {
+    this.setState({
+      showModal: false,
+      stock: ''
+    })
+  }
+*/
+  handleSearchSubmit = (searchQuery) => {
+    this.loadStockChartFromServer(searchQuery);
+  };
 
   /* 함수를 SearchBarForm 으로 전달해야 함 ???*/
   loadStockChartFromServer = (searchQuery) => {
     client.search({searchQuery:searchQuery}, (serverCharts) => (
       this.setState( {stocks: serverCharts} )
     ));
-  };
-
-  handleSearchSubmit = (searchQuery) => {
-    this.loadStockChartFromServer(searchQuery);
   };
 
   render() {
@@ -29,7 +58,13 @@ class ChartGallary extends React.Component {
             <SearchBarForm
               onSearchSubmit={this.handleSearchSubmit}/>
             <ChartList
-              stocks = {this.state.stocks}
+              stocks={this.state.stocks}
+              onImageClick={this.handleOpenModal}
+            />
+            <GalleryModal
+              isOpen={this.state.showModal}
+              onClick={this.handleCloseModal}
+              stockId={this.state.stockId}
             />
           </div>
           <div className='contents'>
@@ -85,19 +120,8 @@ class SearchBarForm extends React.Component {
 }
 
 class ChartList extends React.Component {
-  /* Do not need constructor ...
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      products: [],
-    };
-
-    this.handleProductUpVote = this.handleProductUpVote.bind(this);
-  }
-  */
   render() {
-    console.log(this.props.stocks)
     const stockComponents = this.props.stocks.map((stock) => (
       // JSX component
       //  key 는 React 의 유니크 바인딩을 위한 특별한 프로퍼티...
@@ -106,6 +130,7 @@ class ChartList extends React.Component {
         id                  = {stock.id}
         title               = {stock.code}
         chart               = {stock.chart}
+        onImageClick        = {this.props.onImageClick}
       />
     ));
 
@@ -129,7 +154,6 @@ class Stock extends React.Component {
   }
   <img src={{uri: `data:image/png;base64,${this.props.chart}`}} />
   */
-
   render() {
     return (
       <div className='item'>
@@ -138,11 +162,44 @@ class Stock extends React.Component {
         </div>
         <div className='middle aligned content'>
           <div className='description'>
-            <a href='#'>{this.props.title}</a>
+            <a href='#' id={this.props.id} onClick={this.props.onImageClick}>{this.props.title}</a>
           </div>
         </div>
       </div>
     );
+  }
+}
+
+class GalleryModal extends React.Component {
+  render() {
+    if (this.props.isOpen === false) {
+      return null;
+    }
+
+    return (
+      <div className="ui modal show">
+        <i className="close icon"></i>
+        <div className="header">
+          Profile Picture
+        </div>
+        <div className="image content">
+          <div className="description">
+            <div className="ui header">We've auto-chosen a profile image for you.</div>
+            <p>We've grabbed the following image from the <a href="https://www.gravatar.com" target="_blank">gravatar</a> image associated with your registered e-mail address.</p>
+            <p>Is it okay to use this photo?</p>
+          </div>
+        </div>
+        <div className="actions">
+          <div className="ui black deny button">
+            Nope
+          </div>
+          <div className="ui positive right labeled icon button">
+            Yep, that's me
+            <i className="checkmark icon"></i>
+          </div>
+        </div>
+      </div>
+    )
   }
 }
 

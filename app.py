@@ -1,22 +1,30 @@
-import os
-from flask import Flask, render_template, request, url_for, redirect, jsonify
-import jinja2
+from flask import Flask, Response, jsonify, render_template
+from flask_restful import Resource, Api
+from flask_restful import reqparse
+from flask_cors import CORS
 import chart_app
 
 app = Flask(__name__)
+cors = CORS(app, resource={r"/*":{"orgins":"*"}})
+api = Api(app)
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
 
-@app.route('/search', methods=['POST'])
-def search():
-    if request.method == 'POST':
-        content = request.json
-        query = content['searchQuery']
+class HelloWorld(Resource):
+    def get(self):
+        return {'hello': 'world'}
+
+class Search(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('searchQuery', type=str)
+        args = parser.parse_args()
+
+        query = args['searchQuery']
         data = chart_app.gpdb_dao.search(query)
+        return jsonify(data)
 
-    return data
+api.add_resource(Search, '/search')
+api.add_resource(HelloWorld, '/')
 
 if __name__ == '__main__':
     app.run(debug=True)
